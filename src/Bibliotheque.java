@@ -305,18 +305,17 @@ public class Bibliotheque {
         ));
 
         // Colonnes du tableau
-        String[] columns = {"#", "Type", "Titre", "Auteur", "Année", "Détails", "Disponibilité", "Actions"};
+        String[] columns = {"Type", "Titre", "Auteur", "Année", "Détails", "Disponibilité", "Actions"};
         tableModel = new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 7; // Seule la colonne des actions est éditable
+                return column == 6;
             }
         };
 
-        // Création du tableau
         documentsTable = new JTable(tableModel);
         documentsTable.setFont(normalFont);
-        documentsTable.setRowHeight(35);
+        documentsTable.setRowHeight(40); // Augmentation de la hauteur des lignes
         documentsTable.setShowGrid(true);
         documentsTable.setGridColor(new Color(230, 230, 230));
         documentsTable.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
@@ -324,11 +323,14 @@ public class Bibliotheque {
         documentsTable.getTableHeader().setForeground(Color.WHITE);
         documentsTable.setSelectionBackground(new Color(173, 216, 230));
 
-        // Ajout du renderer et editor pour la colonne des actions
-        documentsTable.getColumnModel().getColumn(7).setCellRenderer(new ButtonsRenderer());
-        documentsTable.getColumnModel().getColumn(7).setCellEditor(new ButtonsEditor(new JCheckBox()));
+        // Ajuster la largeur des colonnes
+        documentsTable.getColumnModel().getColumn(4).setPreferredWidth(50); // Année
+        documentsTable.getColumnModel().getColumn(6).setPreferredWidth(200); // Actions
 
-        // Ajout du tableau à un JScrollPanel
+        // Ajout du renderer et editor pour la colonne des actions
+        documentsTable.getColumnModel().getColumn(6).setCellRenderer(new ButtonsRenderer());
+        documentsTable.getColumnModel().getColumn(6).setCellEditor(new ButtonsEditor(new JCheckBox()));
+
         JScrollPane scrollPane = new JScrollPane(documentsTable);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         tablePanel.add(scrollPane, BorderLayout.CENTER);
@@ -479,7 +481,7 @@ public class Bibliotheque {
             
             String disponibilite = doc.getDisponible() ? "Disponible" : "Emprunté";
             
-            tableModel.addRow(new Object[]{i + 1, type, titre, auteur, annee, details, disponibilite, i});
+            tableModel.addRow(new Object[]{type, titre, auteur, annee, details, disponibilite, i});
         }
     }
 
@@ -554,136 +556,74 @@ public class Bibliotheque {
         private JButton empruntButton, rendreButton, modifierButton, supprimerButton;
         
         public ButtonsRenderer() {
-            setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));
-            setOpaque(true);
+            setLayout(new FlowLayout(FlowLayout.CENTER, 2, 0));
             
-            empruntButton = new JButton("Emprunter");
-            empruntButton.setFont(smallFont);
-            empruntButton.setBackground(primaryColor);
-            empruntButton.setForeground(Color.WHITE);
-            empruntButton.setFocusPainted(false);
-            empruntButton.setBorder(new LineBorder(primaryColor, 1));
+            // Création des boutons avec des dimensions fixes et padding réduit
+            Dimension buttonSize = new Dimension(80, 25);
             
-            rendreButton = new JButton("Rendre");
-            rendreButton.setFont(smallFont);
-            rendreButton.setBackground(accentColor);
-            rendreButton.setForeground(Color.WHITE);
-            rendreButton.setFocusPainted(false);
-            rendreButton.setBorder(new LineBorder(accentColor, 1));
-            
-            modifierButton = new JButton("Modifier");
-            modifierButton.setFont(smallFont);
-            modifierButton.setBackground(new Color(50, 205, 50)); // Vert Lime
-            modifierButton.setForeground(Color.WHITE);
-            modifierButton.setFocusPainted(false);
-            modifierButton.setBorder(new LineBorder(new Color(50, 205, 50), 1));
-            
-            supprimerButton = new JButton(new ImageIcon("icons/trash.png")); // Assurez-vous d'avoir l'icône dans le dossier icons
-            supprimerButton.setToolTipText("Supprimer");
-            supprimerButton.setBackground(new Color(220, 20, 60)); // Rouge Crimson
-            supprimerButton.setForeground(Color.WHITE);
-            supprimerButton.setFocusPainted(false);
+            empruntButton = createActionButton("Emprunter", primaryColor, buttonSize);
+            rendreButton = createActionButton("Rendre", accentColor, buttonSize);
+            modifierButton = createActionButton("Modifier", new Color(50, 205, 50), buttonSize);
+            supprimerButton = createActionButton("Supprimer", new Color(220, 20, 60), buttonSize);
             
             add(empruntButton);
             add(rendreButton);
             add(modifierButton);
             add(supprimerButton);
+
+            setBackground(Color.WHITE);
+        }
+        
+        private JButton createActionButton(String text, Color bgColor, Dimension size) {
+            JButton button = new JButton(text);
+            button.setFont(smallFont);
+            button.setBackground(bgColor);
+            button.setForeground(Color.WHITE);
+            button.setFocusPainted(false);
+            button.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
+            button.setPreferredSize(size);
+            button.setMinimumSize(size);
+            button.setMaximumSize(size);
+            return button;
         }
         
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, 
                                                      boolean isSelected, boolean hasFocus, 
                                                      int row, int column) {
-            setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
-            
             if (value != null) {
                 int index = (Integer) value;
                 Document doc = collection.get(index);
                 empruntButton.setEnabled(doc.getDisponible());
                 rendreButton.setEnabled(!doc.getDisponible());
             }
-            
             return this;
         }
     }
     
     // Editor pour les boutons dans la table
     class ButtonsEditor extends DefaultCellEditor {
-        private JPanel panel;
+        protected JPanel panel;
         private JButton empruntButton, rendreButton, modifierButton, supprimerButton;
         private int index = -1;
+        private boolean isPushed;
         
         public ButtonsEditor(JCheckBox checkBox) {
             super(checkBox);
             
-            panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
+            panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 2, 0));
+            panel.setBackground(Color.WHITE);
             
-            empruntButton = new JButton("Emprunter");
-            empruntButton.setFont(smallFont);
-            empruntButton.setBackground(primaryColor);
-            empruntButton.setForeground(Color.WHITE);
-            empruntButton.setFocusPainted(false);
-            empruntButton.setBorder(new LineBorder(primaryColor, 1));
+            // Création des boutons avec des dimensions fixes et padding réduit
+            Dimension buttonSize = new Dimension(80, 25);
             
-            rendreButton = new JButton("Rendre");
-            rendreButton.setFont(smallFont);
-            rendreButton.setBackground(accentColor);
-            rendreButton.setForeground(Color.WHITE);
-            rendreButton.setFocusPainted(false);
-            rendreButton.setBorder(new LineBorder(accentColor, 1));
+            empruntButton = createActionButton("Emprunter", primaryColor, buttonSize);
+            rendreButton = createActionButton("Rendre", accentColor, buttonSize);
+            modifierButton = createActionButton("Modifier", new Color(50, 205, 50), buttonSize);
+            supprimerButton = createActionButton("Supprimer", new Color(220, 20, 60), buttonSize);
             
-            modifierButton = new JButton("Modifier");
-            modifierButton.setFont(smallFont);
-            modifierButton.setBackground(new Color(50, 205, 50)); // Vert Lime
-            modifierButton.setForeground(Color.WHITE);
-            modifierButton.setFocusPainted(false);
-            modifierButton.setBorder(new LineBorder(new Color(50, 205, 50), 1));
-            
-            supprimerButton = new JButton(new ImageIcon("icons/trash.png")); // Assurez-vous d'avoir l'icône dans le dossier icons
-            supprimerButton.setToolTipText("Supprimer");
-            supprimerButton.setBackground(new Color(220, 20, 60)); // Rouge Crimson
-            supprimerButton.setForeground(Color.WHITE);
-            supprimerButton.setFocusPainted(false);
-            
-            empruntButton.addActionListener(e -> {
-                if (index >= 0 && index < collection.size()) {
-                    Document doc = collection.get(index);
-                    if (doc.getDisponible()) {
-                        doc.emprunterDocument();
-                        showAnimatedSuccess("Document emprunté avec succès!");
-                    } else {
-                        showMessage("Erreur", "Le document est déjà emprunté", JOptionPane.ERROR_MESSAGE);
-                    }
-                    fireEditingStopped();
-                    refreshTable();
-                }
-            });
-            
-            rendreButton.addActionListener(e -> {
-                if (index >= 0 && index < collection.size()) {
-                    Document doc = collection.get(index);
-                    if (!doc.getDisponible()) {
-                        doc.rendreDocument();
-                        showAnimatedSuccess("Document rendu avec succès!");
-                    } else {
-                        showMessage("Erreur", "Le document est déjà disponible", JOptionPane.ERROR_MESSAGE);
-                    }
-                    fireEditingStopped();
-                    refreshTable();
-                }
-            });
-            
-            modifierButton.addActionListener(e -> {
-                if (index >= 0 && index < collection.size()) {
-                    Document doc = collection.get(index);
-                    showModifyDialog(index, doc);
-                    fireEditingStopped();
-                }
-            });
-            
-            supprimerButton.addActionListener(e -> {
-                handleDelete(index);
-            });
+            // Configuration des actions des boutons
+            setupButtonActions();
             
             panel.add(empruntButton);
             panel.add(rendreButton);
@@ -691,8 +631,47 @@ public class Bibliotheque {
             panel.add(supprimerButton);
         }
         
+        private JButton createActionButton(String text, Color bgColor, Dimension size) {
+            JButton button = new JButton(text);
+            button.setFont(smallFont);
+            button.setBackground(bgColor);
+            button.setForeground(Color.WHITE);
+            button.setFocusPainted(false);
+            button.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
+            button.setPreferredSize(size);
+            button.setMinimumSize(size);
+            button.setMaximumSize(size);
+            return button;
+        }
+
+        private void setupButtonActions() {
+            ActionListener actionListener = e -> {
+                JButton button = (JButton)e.getSource();
+                if (index >= 0 && index < collection.size()) {
+                    Document doc = collection.get(index);
+                    if (button == empruntButton && doc.getDisponible()) {
+                        doc.emprunterDocument();
+                        showAnimatedSuccess("Document emprunté avec succès!");
+                    } else if (button == rendreButton && !doc.getDisponible()) {
+                        doc.rendreDocument();
+                        showAnimatedSuccess("Document rendu avec succès!");
+                    } else if (button == modifierButton) {
+                        showModifyDialog(index, doc);
+                    } else if (button == supprimerButton) {
+                        handleDelete(index);
+                    }
+                }
+                fireEditingStopped();
+            };
+
+            empruntButton.addActionListener(actionListener);
+            rendreButton.addActionListener(actionListener);
+            modifierButton.addActionListener(actionListener);
+            supprimerButton.addActionListener(actionListener);
+        }
+        
         @Override
-        public Component getTableCellEditorComponent(JTable table, Object value, 
+        public Component getTableCellEditorComponent(JTable table, Object value,
                                                    boolean isSelected, int row, int column) {
             if (value != null) {
                 index = (Integer) value;
@@ -702,13 +681,20 @@ public class Bibliotheque {
                     rendreButton.setEnabled(!doc.getDisponible());
                 }
             }
-            
+            isPushed = true;
             return panel;
         }
         
         @Override
         public Object getCellEditorValue() {
+            isPushed = false;
             return index;
+        }
+        
+        @Override
+        public boolean stopCellEditing() {
+            isPushed = false;
+            return super.stopCellEditing();
         }
         
         private void handleDelete(int index) {
