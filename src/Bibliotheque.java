@@ -305,11 +305,11 @@ public class Bibliotheque {
         ));
 
         // Colonnes du tableau
-        String[] columns = {"Type", "Titre", "Auteur", "Année", "Détails", "Disponibilité", "Actions"};
+        String[] columns = {"#", "Type", "Titre", "Auteur", "Année", "Détails", "Disponibilité", "Actions"};
         tableModel = new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 6; // Seule la colonne des actions est éditable
+                return column == 7; // Seule la colonne des actions est éditable
             }
         };
 
@@ -325,8 +325,8 @@ public class Bibliotheque {
         documentsTable.setSelectionBackground(new Color(173, 216, 230));
 
         // Ajout du renderer et editor pour la colonne des actions
-        documentsTable.getColumnModel().getColumn(6).setCellRenderer(new ButtonsRenderer());
-        documentsTable.getColumnModel().getColumn(6).setCellEditor(new ButtonsEditor(new JCheckBox()));
+        documentsTable.getColumnModel().getColumn(7).setCellRenderer(new ButtonsRenderer());
+        documentsTable.getColumnModel().getColumn(7).setCellEditor(new ButtonsEditor(new JCheckBox()));
 
         // Ajout du tableau à un JScrollPanel
         JScrollPane scrollPane = new JScrollPane(documentsTable);
@@ -479,7 +479,7 @@ public class Bibliotheque {
             
             String disponibilite = doc.getDisponible() ? "Disponible" : "Emprunté";
             
-            tableModel.addRow(new Object[]{type, titre, auteur, annee, details, disponibilite, i});
+            tableModel.addRow(new Object[]{i + 1, type, titre, auteur, annee, details, disponibilite, i});
         }
     }
 
@@ -578,12 +578,11 @@ public class Bibliotheque {
             modifierButton.setFocusPainted(false);
             modifierButton.setBorder(new LineBorder(new Color(50, 205, 50), 1));
             
-            supprimerButton = new JButton("Supprimer");
-            supprimerButton.setFont(smallFont);
+            supprimerButton = new JButton(new ImageIcon("icons/trash.png")); // Assurez-vous d'avoir l'icône dans le dossier icons
+            supprimerButton.setToolTipText("Supprimer");
             supprimerButton.setBackground(new Color(220, 20, 60)); // Rouge Crimson
             supprimerButton.setForeground(Color.WHITE);
             supprimerButton.setFocusPainted(false);
-            supprimerButton.setBorder(new LineBorder(new Color(220, 20, 60), 1));
             
             add(empruntButton);
             add(rendreButton);
@@ -640,12 +639,11 @@ public class Bibliotheque {
             modifierButton.setFocusPainted(false);
             modifierButton.setBorder(new LineBorder(new Color(50, 205, 50), 1));
             
-            supprimerButton = new JButton("Supprimer");
-            supprimerButton.setFont(smallFont);
+            supprimerButton = new JButton(new ImageIcon("icons/trash.png")); // Assurez-vous d'avoir l'icône dans le dossier icons
+            supprimerButton.setToolTipText("Supprimer");
             supprimerButton.setBackground(new Color(220, 20, 60)); // Rouge Crimson
             supprimerButton.setForeground(Color.WHITE);
             supprimerButton.setFocusPainted(false);
-            supprimerButton.setBorder(new LineBorder(new Color(220, 20, 60), 1));
             
             empruntButton.addActionListener(e -> {
                 if (index >= 0 && index < collection.size()) {
@@ -684,12 +682,7 @@ public class Bibliotheque {
             });
             
             supprimerButton.addActionListener(e -> {
-                if (index >= 0 && index < collection.size()) {
-                    supprimerDocument(index);
-                    showAnimatedSuccess("Document supprimé avec succès!");
-                    fireEditingStopped();
-                    refreshTable();
-                }
+                handleDelete(index);
             });
             
             panel.add(empruntButton);
@@ -716,6 +709,26 @@ public class Bibliotheque {
         @Override
         public Object getCellEditorValue() {
             return index;
+        }
+        
+        private void handleDelete(int index) {
+            if (index >= 0 && index < collection.size()) {
+                Document doc = collection.get(index);
+                int response = JOptionPane.showConfirmDialog(
+                    mainFrame,
+                    "Êtes-vous sûr de vouloir supprimer le document \"" + doc.getTitre() + "\" ?\n" +
+                    "Cette action est irréversible.",
+                    "Confirmation de suppression",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+                );
+                
+                if (response == JOptionPane.YES_OPTION) {
+                    supprimerDocument(index);
+                    showAnimatedSuccess("Document supprimé avec succès!");
+                    fireEditingStopped();
+                }
+            }
         }
     }
     private void showModifyDialog(int index, Document doc) {
