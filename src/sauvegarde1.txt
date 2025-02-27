@@ -1,0 +1,11 @@
+Livre;Le Petit Prince;Antoine de Saint-Exupéry;1943;96;true
+Magazine;National Geographic;National Geographic Society;2023;3;true
+Livre;L'Étranger;Albert Camus;1942;159;true
+Magazine;Science & Vie;Mondadori France;2022;6;true
+Livre;Le Petit Prince;Antoine de Saint-Exupéry;1943;96;true
+Magazine;National Geographic;National Geographic Society;2023;3;true
+Livre;L'Étranger;Albert Camus;1942;159;true
+Magazine;Science & Vie;Mondadori France;2022;6;trueLivre;Le Petit Prince;Antoine de Saint-Exupéry;1943;96;true
+Magazine;National Geographic;National Geographic Society;2023;3;true
+Livre;L'Étranger;Albert Camus;1942;159;true
+Magazine;Science & Vie;Mondadori France;2022;6;true

@@ -8,6 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.border.LineBorder;
 import java.util.concurrent.TimeUnit;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Bibliotheque {
     private List<Document> collection;
@@ -246,11 +252,20 @@ public class Bibliotheque {
 
             headerPanel.add(leftPanel, BorderLayout.WEST);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
         buttonPanel.setOpaque(false);
+
+        JButton loadButton = createStyledButton("Charger un fichier", null);
+        loadButton.addActionListener(e -> loadFromFile());
+
+        JButton saveButton = createStyledButton("Sauvegarder", null);
+        saveButton.addActionListener(e -> saveToFile());
 
         refreshButton = createStyledButton("Actualiser", new ImageIcon());
         refreshButton.addActionListener(e -> refreshTable());
+
+        buttonPanel.add(loadButton);
+        buttonPanel.add(saveButton); 
         buttonPanel.add(refreshButton);
 
         headerPanel.add(buttonPanel, BorderLayout.EAST);
@@ -827,15 +842,91 @@ public class Bibliotheque {
         modifyDialog.setVisible(true);
     }
     
+    private void loadFromFile() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Charger les documents");
+        
+        if (fileChooser.showOpenDialog(mainFrame) == JFileChooser.APPROVE_OPTION) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(fileChooser.getSelectedFile()))) {
+                collection.clear();
+                String line;
+                
+                while ((line = reader.readLine()) != null) {
+                    String[] parts = line.split(";");
+                    if (parts.length >= 5) {
+                        String type = parts[0];
+                        String titre = parts[1];
+                        String auteur = parts[2];
+                        int annee = Integer.parseInt(parts[3]);
+                        int specific = Integer.parseInt(parts[4]);
+                        boolean disponible = Boolean.parseBoolean(parts[5]);
+                        
+                        Document doc;
+                        if (type.equals("Livre")) {
+                            doc = new Livre(titre, auteur, annee, specific);
+                        } else {
+                            doc = new Magazine(titre, auteur, annee, specific);
+                        }
+                        
+                        if (!disponible) {
+                            doc.emprunterDocument();
+                        }
+                        
+                        collection.add(doc);
+                    }
+                }
+                refreshTable();
+                showAnimatedSuccess("Documents chargés avec succès!");
+            } catch (IOException ex) {
+                showMessage("Erreur", "Erreur lors de la lecture du fichier: " + ex.getMessage(), JOptionPane.ERROR_MESSAGE);
+            } catch (NumberFormatException ex) {
+                showMessage("Erreur", "Format de fichier incorrect", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void saveToFile() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Sauvegarder les documents");
+        
+        if (fileChooser.showSaveDialog(mainFrame) == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            if (!file.getName().toLowerCase().endsWith(".txt")) {
+                file = new File(file.getAbsolutePath() + ".txt");
+            }
+            
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                for (Document doc : collection) {
+                    String type = (doc instanceof Livre) ? "Livre" : "Magazine";
+                    String specific = (doc instanceof Livre) ? 
+                        String.valueOf(((Livre)doc).getNombrePages()) :
+                        String.valueOf(((Magazine)doc).getMoisPublication());
+                        
+                    writer.write(String.format("%s;%s;%s;%d;%s;%b%n",
+                        type,
+                        doc.getTitre(),
+                        doc.getAuteur(),
+                        doc.getAnneePublication(),
+                        specific,
+                        doc.getDisponible()
+                    ));
+                }
+                showAnimatedSuccess("Documents sauvegardés avec succès!");
+            } catch (IOException ex) {
+                showMessage("Erreur", "Erreur lors de la sauvegarde: " + ex.getMessage(), JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             Bibliotheque mesDoc = new Bibliotheque();
             
             // Ajouter quelques documents de test
-            mesDoc.ajouterDocument(new Livre("Le Petit Prince", "Antoine de Saint-Exupéry", 1943, 96));
-            mesDoc.ajouterDocument(new Magazine("National Geographic", "National Geographic Society", 2023, 3));
-            mesDoc.ajouterDocument(new Livre("L'Étranger", "Albert Camus", 1942, 159));
-            mesDoc.ajouterDocument(new Magazine("Science & Vie", "Mondadori France", 2022, 6));
+            // mesDoc.ajouterDocument(new Livre("Le Petit Prince", "Antoine de Saint-Exupéry", 1943, 96));
+            // mesDoc.ajouterDocument(new Magazine("National Geographic", "National Geographic Society", 2023, 3));
+            // mesDoc.ajouterDocument(new Livre("L'Étranger", "Albert Camus", 1942, 159));
+            // mesDoc.ajouterDocument(new Magazine("Science & Vie", "Mondadori France", 2022, 6));
         });
     }
 }
