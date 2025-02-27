@@ -2,6 +2,7 @@ public abstract class Document {
     private String titre, auteur;
     private int anneePublication;
     private boolean disponible;
+    
 
     Document(String titre, String auteur, int anneePublication){
         this.titre = titre;

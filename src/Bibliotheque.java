@@ -22,6 +22,9 @@ public class Bibliotheque {
     private Font titleFont = new Font("Segoe UI", Font.BOLD, 20);
     private Font normalFont = new Font("Segoe UI", Font.PLAIN, 14);
     private Font smallFont = new Font("Segoe UI", Font.PLAIN, 12);
+    private boolean sortAscending = true;
+    private String currentSortColumn = "";
+
 
     Bibliotheque() {
         collection = new ArrayList<Document>();
@@ -179,6 +182,70 @@ public class Bibliotheque {
 
         headerPanel.add(searchPanel, BorderLayout.WEST);
 
+        // Ajout du panel de tri
+            JPanel sortPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+            sortPanel.setOpaque(false);
+
+            // Tri par titre
+            JButton sortTitreAsc = createStyledButton("↑", null);
+            sortTitreAsc.setToolTipText("Trier par titre (A-Z)");
+            sortTitreAsc.setFont(new Font("Segoe UI", Font.BOLD, 16));
+            sortTitreAsc.setMargin(new Insets(2, 6, 2, 6));
+
+            JButton sortTitreDesc = createStyledButton("↓", null);
+            sortTitreDesc.setToolTipText("Trier par titre (Z-A)");
+            sortTitreDesc.setFont(new Font("Segoe UI", Font.BOLD, 16));
+            sortTitreDesc.setMargin(new Insets(2, 6, 2, 6));
+
+            JLabel sortTitreLabel = new JLabel("Titre");
+            sortTitreLabel.setFont(normalFont);
+            sortTitreLabel.setForeground(Color.WHITE);
+
+            // Tri par disponibilité
+            JButton sortDispoButton = createStyledButton("↕", null);
+            sortDispoButton.setToolTipText("Trier par disponibilité");
+            sortDispoButton.setFont(new Font("Segoe UI", Font.BOLD, 16));
+            sortDispoButton.setMargin(new Insets(2, 6, 2, 6));
+
+            JLabel sortDispoLabel = new JLabel("Disponibilité");
+            sortDispoLabel.setFont(normalFont);
+            sortDispoLabel.setForeground(Color.WHITE);
+
+            // Action pour le tri par titre (croissant)
+            sortTitreAsc.addActionListener(e -> {
+                sortAscending = true;
+                currentSortColumn = "titre";
+                sortCollectionAndRefresh();
+            });
+
+            // Action pour le tri par titre (décroissant)
+            sortTitreDesc.addActionListener(e -> {
+                sortAscending = false;
+                currentSortColumn = "titre";
+                sortCollectionAndRefresh();
+            });
+
+            // Action pour le tri par disponibilité
+            sortDispoButton.addActionListener(e -> {
+                currentSortColumn = "disponibilite";
+                sortCollectionAndRefresh();
+            });
+
+            sortPanel.add(sortTitreLabel);
+            sortPanel.add(sortTitreAsc);
+            sortPanel.add(sortTitreDesc);
+            sortPanel.add(Box.createHorizontalStrut(10));
+            sortPanel.add(sortDispoLabel);
+            sortPanel.add(sortDispoButton);
+
+            // Ajout des panels à l'en-tête
+            JPanel leftPanel = new JPanel(new GridLayout(2, 1, 0, 5));
+            leftPanel.setOpaque(false);
+            leftPanel.add(searchPanel);
+            leftPanel.add(sortPanel);
+
+            headerPanel.add(leftPanel, BorderLayout.WEST);
+
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.setOpaque(false);
 
@@ -188,6 +255,26 @@ public class Bibliotheque {
 
         headerPanel.add(buttonPanel, BorderLayout.EAST);
         return headerPanel;
+    }
+
+    private void sortCollectionAndRefresh() {
+        if (currentSortColumn.equals("titre")) {
+            // Tri par titre
+            collection.sort((doc1, doc2) -> {
+                int result = doc1.getTitre().compareToIgnoreCase(doc2.getTitre());
+                return sortAscending ? result : -result;
+            });
+        } else if (currentSortColumn.equals("disponibilite")) {
+            // Tri par disponibilité (disponibles en haut)
+            collection.sort((doc1, doc2) -> {
+                if (doc1.getDisponible() == doc2.getDisponible()) {
+                    return 0;
+                }
+                return doc1.getDisponible() ? -1 : 1;  // Les disponibles en premier
+            });
+        }
+        
+        refreshTable();
     }
 
     private JPanel createTablePanel() {
