@@ -10,24 +10,27 @@ import javax.swing.border.LineBorder;
 import java.util.concurrent.TimeUnit;
 
 public class Bibliotheque {
-    private List<Document> collection;
-    private JFrame mainFrame;
-    private JTable documentsTable;
-    private DefaultTableModel tableModel;
-    private JPanel mainPanel;
-    private JButton addButton, refreshButton;
-    private Color primaryColor = new Color(65, 105, 225); // Bleu royal
-    private Color secondaryColor = new Color(240, 248, 255); // Alice Blue
-    private Color accentColor = new Color(255, 99, 71); // Tomato
-    private Font titleFont = new Font("Segoe UI", Font.BOLD, 20);
-    private Font normalFont = new Font("Segoe UI", Font.PLAIN, 14);
-    private Font smallFont = new Font("Segoe UI", Font.PLAIN, 12);
-    private boolean sortAscending = true;
-    private String currentSortColumn = "";
+    public List<Document> collection;
+    public JFrame mainFrame;
+    public JTable documentsTable;
+    public DefaultTableModel tableModel;
+    public JPanel mainPanel;
+    public JButton addButton, refreshButton;
+    public Color primaryColor = new Color(65, 105, 225); // Bleu royal
+    public Color secondaryColor = new Color(240, 248, 255); // Alice Blue
+    public Color accentColor = new Color(255, 99, 71); // Tomato
+    public Font titleFont = new Font("Segoe UI", Font.BOLD, 20);
+    public Font normalFont = new Font("Segoe UI", Font.PLAIN, 14);
+    public Font smallFont = new Font("Segoe UI", Font.PLAIN, 12);
+    public boolean sortAscending = true;
+    public String currentSortColumn = "";
+
 
 
     Bibliotheque() {
         collection = new ArrayList<Document>();
+        HeaderPanel headerPanel = new HeaderPanel();
+
         initializeUI();
     }
 
@@ -76,7 +79,7 @@ public class Bibliotheque {
         mainPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
 
         // Header
-        JPanel headerPanel = createHeaderPanel();
+        JPanel headerPanel = headerPanel.createHeaderPanel();
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
         // Table des documents
@@ -91,7 +94,7 @@ public class Bibliotheque {
         mainFrame.setVisible(true);
     }
 
-    private JPanel createHeaderPanel() {
+    private JPanel headerPanel.createHeaderPanel() {
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBackground(primaryColor);
         headerPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
