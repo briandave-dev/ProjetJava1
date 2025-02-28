@@ -101,6 +101,21 @@ public class Bibliotheque {
 
         mainFrame.add(mainPanel);
         mainFrame.setVisible(true);
+
+        // Ajouter un écouteur pour la fermeture de la fenêtre
+        mainFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int response = JOptionPane.showConfirmDialog(mainFrame, 
+                    "Voulez-vous sauvegarder votre travail ?", 
+                    "Sauvegarde", 
+                    JOptionPane.YES_NO_OPTION);
+                if (response == JOptionPane.YES_OPTION) {
+                    saveToFile(); // Appeler la méthode pour sauvegarder
+                }
+                mainFrame.dispose(); // Fermer l'application
+            }
+        });
     }
 
     private JPanel createHeaderPanel() {
@@ -657,9 +672,11 @@ public class Bibliotheque {
                     Document doc = collection.get(index);
                     if (button == empruntButton && doc.getDisponible()) {
                         doc.emprunterDocument();
+                        refreshTable();
                         showAnimatedSuccess("Document emprunté avec succès!");
                     } else if (button == rendreButton && !doc.getDisponible()) {
                         doc.rendreDocument();
+                        refreshTable();
                         showAnimatedSuccess("Document rendu avec succès!");
                     } else if (button == modifierButton) {
                         showModifyDialog(index, doc);
@@ -853,7 +870,7 @@ public class Bibliotheque {
         
         if (fileChooser.showOpenDialog(mainFrame) == JFileChooser.APPROVE_OPTION) {
             try (BufferedReader reader = new BufferedReader(new FileReader(fileChooser.getSelectedFile()))) {
-                collection.clear();
+                // collection.clear();
                 String line;
                 
                 while ((line = reader.readLine()) != null) {
@@ -877,7 +894,7 @@ public class Bibliotheque {
                             doc.emprunterDocument();
                         }
                         
-                        collection.add(doc);
+                        ajouterDocument(doc);
                     }
                 }
                 refreshTable();
