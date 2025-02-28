@@ -1,5 +1,9 @@
+package controller;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
+import model.Document;
+
 import java.awt.*;
 import java.util.List;
 
@@ -12,7 +16,7 @@ public class Table  {
         this.bibliotheque = bibliotheque;
     }
 
-    JPanel createTablePanel(List<Document> col) {
+    public JPanel createTablePanel(List<Document> col) {
         StyleBiblio myStyle = new StyleBiblio();
         JPanel tablePanel = new JPanel(new BorderLayout(0, 50));
         tablePanel.setBackground(myStyle.getSecondaryColor());

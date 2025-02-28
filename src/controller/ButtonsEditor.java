@@ -1,4 +1,8 @@
+package controller;
 import javax.swing.*;
+
+import model.Document;
+
 import java.awt.*;
 import java.awt.event.*;
 

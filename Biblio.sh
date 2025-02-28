@@ -1,2 +1,2 @@
 #!/bin/bash
-java -jar BiblioApp.jar
+java -jar Bibliotheque.jar

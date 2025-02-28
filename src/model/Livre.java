@@ -1,7 +1,8 @@
-class Livre extends Document {
+package model;
+public class Livre extends Document {
     private int nbrePages;
 
-    Livre(String titre, String auteur, int anneePublication, int nbrePages) {
+    public Livre(String titre, String auteur, int anneePublication, int nbrePages) {
         super(titre, auteur, anneePublication);
         this.nbrePages = nbrePages;
     }

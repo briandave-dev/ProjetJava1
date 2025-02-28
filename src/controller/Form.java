@@ -1,9 +1,15 @@
+package controller;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.text.*;
+
+import model.Document;
+import model.Livre;
+import model.Magazine;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;

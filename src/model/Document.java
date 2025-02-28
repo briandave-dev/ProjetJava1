@@ -1,3 +1,4 @@
+package model;
 public abstract class Document {
     private String titre, auteur;
     private int anneePublication;

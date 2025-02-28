@@ -1,3 +1,4 @@
+package model;
 public class Magazine extends Document {
     private int moisPublication;
 

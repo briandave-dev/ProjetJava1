@@ -1,9 +1,15 @@
+package controller;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.text.*;
+
+import model.Document ;
+import model.Livre;
+import model.Magazine;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -38,7 +44,7 @@ public class Bibliotheque {
     Table myTable;
     Form myForm;
 
-    Bibliotheque() {
+    public Bibliotheque() {
         collection = new ArrayList<Document>();
         initializeUI();
          
@@ -561,15 +567,4 @@ public class Bibliotheque {
             }
         });
     }
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            Bibliotheque mesDoc = new Bibliotheque();
-            
-            // Ajouter quelques documents de test
-            // mesDoc.ajouterDocument(new Livre("Le Petit Prince", "Antoine de Saint-Exupéry", 1943, 96));
-            // mesDoc.ajouterDocument(new Magazine("National Geographic", "National Geographic Society", 2023, 3));
-            // mesDoc.ajouterDocument(new Livre("L'Étranger", "Albert Camus", 1942, 159));
-            // mesDoc.ajouterDocument(new Magazine("Science & Vie", "Mondadori France", 2022, 6));
-        });
     }
-}

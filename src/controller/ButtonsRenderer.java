@@ -1,5 +1,9 @@
+package controller;
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
+
+import model.Document;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;

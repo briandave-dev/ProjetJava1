@@ -1,5 +1,11 @@
+package controller;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import model.Document;
+import model.Livre;
+import model.Magazine;
+
 import java.awt.*;
 
 
