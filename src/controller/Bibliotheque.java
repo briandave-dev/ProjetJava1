@@ -387,7 +387,6 @@ public class Bibliotheque {
         anneeLabel.setFont(normalFont);
         JTextField anneeField = new JTextField(String.valueOf(doc.getAnneePublication()), 20);
         anneeField.setFont(normalFont);
-        anneeField.setText("0");
         NumericTextField(anneeField);
         formPanel.add(anneeLabel);
         formPanel.add(anneeField);
@@ -407,7 +406,6 @@ public class Bibliotheque {
             specificLabel = new JLabel("Mois de publication: ");
             specificField = new JTextField(String.valueOf(magazine.getMoisPublication()), 20);
         }
-        specificField.setText("0");
        NumericTextField(specificField);
         specificLabel.setFont(normalFont);
         specificField.setFont(normalFont);
