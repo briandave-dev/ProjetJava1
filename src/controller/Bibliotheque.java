@@ -387,6 +387,7 @@ public class Bibliotheque {
         anneeLabel.setFont(normalFont);
         JTextField anneeField = new JTextField(String.valueOf(doc.getAnneePublication()), 20);
         anneeField.setFont(normalFont);
+        anneeField.setText("0");
         NumericTextField(anneeField);
         formPanel.add(anneeLabel);
         formPanel.add(anneeField);
@@ -400,11 +401,13 @@ public class Bibliotheque {
             specificLabel = new JLabel("Nombre de pages: ");
             specificField = new JTextField(String.valueOf(livre.getNombrePages()), 20);
             
+            
         } else {
             Magazine magazine = (Magazine) doc;
             specificLabel = new JLabel("Mois de publication: ");
             specificField = new JTextField(String.valueOf(magazine.getMoisPublication()), 20);
         }
+        specificField.setText("0");
        NumericTextField(specificField);
         specificLabel.setFont(normalFont);
         specificField.setFont(normalFont);
@@ -438,6 +441,10 @@ public class Bibliotheque {
                 if (doc instanceof Livre) {
                     updatedDoc = new Livre(titre, auteur, annee, specific);
                 } else {
+                    if(specific<1 || specific > 12) {
+                        showMessage("Erreur", "Il n'y a que 12 mois grand", JOptionPane.ERROR_MESSAGE);    
+                        return;
+                    }
                     updatedDoc = new Magazine(titre, auteur, annee, specific);
                 }
                 

@@ -71,6 +71,7 @@ public class Form {
         JLabel auteurLabel = new JLabel("Auteur: ");
         auteurLabel.setFont(myStyle.getNormalFont());
         JTextField auteurField = new JTextField(20);
+        
         auteurField.setFont(myStyle.getNormalFont());
         fieldsPanel.add(auteurLabel);
         fieldsPanel.add(auteurField);
@@ -79,6 +80,7 @@ public class Form {
         JLabel anneeLabel = new JLabel("Année de publication: ");
         anneeLabel.setFont(myStyle.getNormalFont());
         JTextField anneeField = new JTextField(20);
+        anneeField.setText("0");
         bibliotheque.NumericTextField(anneeField);
         anneeField.setFont(myStyle.getNormalFont());
         fieldsPanel.add(anneeLabel);
@@ -88,6 +90,7 @@ public class Form {
         JLabel specificLabel = new JLabel("Nombre de pages: ");
         specificLabel.setFont(myStyle.getNormalFont());
         JTextField specificField = new JTextField(20);
+        specificField.setText("0");
         bibliotheque.NumericTextField(specificField);
         specificField.setFont(myStyle.getNormalFont());
         fieldsPanel.add(specificLabel);
@@ -125,12 +128,14 @@ public class Form {
                 if (typeCombo.getSelectedItem().equals("Livre")) {
                     
                     newDoc = new Livre(titre, auteur, annee, specific);
-                } else {
-                    newDoc = new Magazine(titre, auteur, annee, specific);
+                } else { 
+                	
                     if (specific<1 || specific > 12) {
                         bibliotheque.showMessage("Erreur", "Il n'y a que 12 mois grand", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
+                    newDoc = new Magazine(titre, auteur, annee, specific);
+                   
                 }
 
                 bibliotheque.ajouterDocument(newDoc);
@@ -141,8 +146,8 @@ public class Form {
                 // Réinitialiser les champs
                 titreField.setText("");
                 auteurField.setText("");
-                anneeField.setText("");
-                specificField.setText("");
+                anneeField.setText("0");
+                specificField.setText("0");
             } catch (NumberFormatException ex) {
                 bibliotheque.showMessage("Erreur", "L'année et les détails spécifiques doivent être des nombres entiers", JOptionPane.ERROR_MESSAGE);
             } catch (Exception ex) {
