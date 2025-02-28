@@ -1,6 +1,7 @@
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.*;
@@ -53,6 +54,8 @@ public class Bibliotheque {
         if (index >= 0 && index < collection.size()) {
             collection.remove(index);
             refreshTable();
+            // Ajoutez cette ligne pour forcer la mise à jour des éditeurs
+            documentsTable.getColumnModel().getColumn(6).getCellEditor().cancelCellEditing();
         }
     }
 
@@ -504,6 +507,14 @@ public class Bibliotheque {
             
             tableModel.addRow(new Object[]{type, titre, auteur, annee, details, disponibilite, i});
         }
+        
+        // Ajoutez ces lignes pour réinitialiser l'éditeur
+        if (documentsTable != null && documentsTable.getColumnModel().getColumnCount() > 6) {
+            TableCellEditor editor = documentsTable.getColumnModel().getColumn(6).getCellEditor();
+            if (editor != null) {
+                editor.cancelCellEditing();
+            }
+        }
     }
 
     private JButton createStyledButton(String text, Icon icon) {
@@ -734,6 +745,8 @@ public class Bibliotheque {
                 
                 if (response == JOptionPane.YES_OPTION) {
                     supprimerDocument(index);
+                    // Réinitialiser l'index après la suppression
+                    this.index = -1;
                     showAnimatedSuccess("Document supprimé avec succès!");
                     fireEditingStopped();
                 }

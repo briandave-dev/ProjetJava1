@@ -1,0 +1,9 @@
+Livre;Le Petit Prince;Antoine de Saint-Exupéry;1943;96;false
+Livre;L'Étranger;Albert Camus;1942;159;false
+Magazine;Science & Vie;Mondadori France;2022;6;true
+Livre;1984;George Orwell;1949;328;false
+Magazine;Le Monde Diplomatique;Le Monde;2024;2;false
+Livre;Les Misérables;Victor Hugo;1862;1232;false
+Magazine;Pour la Science;Pour la Science;2023;8;false
+Livre;Harry Potter à l'école des sorciers;J.K. Rowling;1997;309;false
+Livre;dffd;dfd;55;550;true
