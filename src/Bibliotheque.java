@@ -77,7 +77,7 @@ public class Bibliotheque {
         mainFrame.setLocationRelativeTo(null);
 
         // Panel principal avec BorderLayout
-        mainPanel = new JPanel(new BorderLayout(1880, 10));
+        mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.setBackground(secondaryColor);
         mainPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
 
@@ -85,13 +85,19 @@ public class Bibliotheque {
         JPanel headerPanel = createHeaderPanel();
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
-        // Table des documents
-        JPanel tablePanel = createTablePanel();
-        mainPanel.add(tablePanel, BorderLayout.CENTER);
+        // Panel central pour contenir le formulaire et la table
+        JPanel centerPanel = new JPanel(new BorderLayout(0, 10));
+        centerPanel.setBackground(secondaryColor);
 
-        // Formulaire d'ajout
+        // Formulaire d'ajout (maintenant en haut)
         JPanel formPanel = createFormPanel();
-        mainPanel.add(formPanel, BorderLayout.SOUTH);
+        centerPanel.add(formPanel, BorderLayout.NORTH);
+
+        // Table des documents (maintenant en bas)
+        JPanel tablePanel = createTablePanel();
+        centerPanel.add(tablePanel, BorderLayout.CENTER);
+
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
 
         mainFrame.add(mainPanel);
         mainFrame.setVisible(true);
