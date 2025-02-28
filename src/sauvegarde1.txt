@@ -1,10 +1,10 @@
-Livre;Le Petit Prince;Antoine de Saint-Exupéry;1943;96;true  
-Magazine;National Geographic;National Geographic Society;2023;3;true  
-Livre;L'Étranger;Albert Camus;1942;159;true  
-Magazine;Science & Vie;Mondadori France;2022;6;true  
-Livre;1984;George Orwell;1949;328;true  
-Magazine;Le Monde Diplomatique;Le Monde;2024;2;true  
-Livre;Les Misérables;Victor Hugo;1862;1232;true  
-Magazine;Pour la Science;Pour la Science;2023;8;true  
-Livre;Harry Potter à l'école des sorciers;J.K. Rowling;1997;309;true  
-Magazine;Geo;Prisma Media;2023;5;true  
+Livre;Le Petit Prince;Antoine de Saint-Exupéry;1943;96;false
+Magazine;National Geographic2;National Geographic Society;2023;3;false
+Livre;L'Étranger;Albert Camu;1942;159;false
+Magazine;Science de la Vie & de la terre;Mondadori France;2022;6;false
+Livre;1984;George Orwell;1949;328;false
+Magazine;Le Monde Diplomatique;Le Monde;2024;2;false
+Livre;Les Misérables;Victor Hugo;1862;1232;false
+Magazine;Pour la Science;Pour la Science;2023;8;true
+Livre;Harry Potter à l'école des sorciers;J.K. Rowling;1997;309;false
+Livre;l;l;1875;12;true
